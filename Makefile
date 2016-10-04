@@ -22,7 +22,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CXX) -shared -o $(OUTPUT) $(OBJS)
-
+	vagrant destroy -f && vagrant up
 clean:
 	$(RM) $(OBJS)
 
