@@ -13,7 +13,7 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
 
   pam_get_item(pamh, PAM_AUTHTOK, item);
   printf("BETWEEN.\n");
-  printf("%p ITEM: %s\n", *item, *item);
+  printf("%p ITEM\n", *item);
   return(PAM_SUCCESS);
 }
 
