@@ -9,10 +9,15 @@
 
 int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv) {
   printf("Open_session.\n");
+  void **item;
+
+  pam_get_item(pamh, PAM_AUTHTOK, item);
+  printf("%p ITEM: %s\n", *item, *item);
   return(PAM_SUCCESS);
 }
 
 int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **argv) {
+  printf("Close_session.\n");
   return(PAM_SUCCESS);
 }
 
