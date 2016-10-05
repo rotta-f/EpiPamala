@@ -48,7 +48,7 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
 PAM entry point for setting user credentials (that is, to actually
 establish the authenticated user's credentials to the service provider)
 */
-int pam_sm_setcred(pam_handle_t *pamh, int flags, int argc, const char **argv) {
+/*int pam_sm_setcred(pam_handle_t *pamh, int flags, int argc, const char **argv) {
     printf("pam_sm_setcred\n");
     return(PAM_IGNORE);
-}
+}*/
