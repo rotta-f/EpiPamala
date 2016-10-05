@@ -13,7 +13,7 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
 
   int retvalue;
   retvalue = pam_get_user(pamh, item, "login:");
-  printf("PAM_GET_ITEM: %s\n", pam_strerror(pamh, retvalue));
+  printf("PAM_GET_USER: %s\n", pam_strerror(pamh, retvalue));
   printf("%p ITEM\n", *item);
   return(PAM_SUCCESS);
 }
