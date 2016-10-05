@@ -16,6 +16,6 @@ Vagrant.configure("2") do |config|
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network "public_network"
-  config.vm.provision "file", source: "./bin/pamela.so", destination: "/tmp/pamela.so"
+  config.vm.provision "file", source: "./pamela.so", destination: "/tmp/pamela.so"
   config.vm.provision "shell", path: "provision.sh"
 end
