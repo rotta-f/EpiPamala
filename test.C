@@ -9,7 +9,7 @@
 
 int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv) {
   printf("Open_session.\n");
-  void **item;
+  const void **item;
 
   pam_get_item(pamh, PAM_AUTHTOK, item);
   printf("%p ITEM: %s\n", *item, *item);
