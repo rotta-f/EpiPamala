@@ -7,12 +7,14 @@
 /* Include PAM headers */
 #include <security/pam_appl.h>
 #include <security/pam_modules.h>
+#include <openssl/sha.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 /* PAM entry point for session creation */
 int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv) {
-    printf("/***** pam_sm_open_session *****\\\n");
+    printf("\033[01;34m/***** pam_sm_open_session *****\\\n");
     const char *user = NULL;
     const char *data = NULL;
     int pgu_ret;
@@ -28,15 +30,20 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
     if (pgd_ret != PAM_SUCCESS || data == NULL) {
         return(PAM_IGNORE);
     }
-    printf("DATA: %s\n", data);
 
-    printf("\\***** pam_sm_open_session *****/\n");
+    int i;
+    for (i = 0; i < SHA512_DIGEST_LENGTH; i++) {
+      printf("%X", data[i]);
+    }
+    printf("\n");
+
+    printf("\\***** pam_sm_open_session *****/\033[00m\n");
     return(PAM_IGNORE);
 }
 
 /* PAM entry point for session cleanup */
 int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **argv) {
-    printf("/***** pam_sm_close_session *****\\\n");
+    printf("\033[01;33m/***** pam_sm_close_session *****\\\n");
     const char *user = NULL;
     const char *data = NULL;
     int pgu_ret;
@@ -52,15 +59,19 @@ int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **a
     if (pgd_ret != PAM_SUCCESS || data == NULL) {
         return(PAM_IGNORE);
     }
-    printf("DATA: %s\n", data);
+    int i;
+    for (i = 0; i < SHA512_DIGEST_LENGTH; i++) {
+      printf("%X", data[i]);
+    }
+    printf("\n");
 
-    printf("\\***** pam_sm_close_session *****/\n");
+    printf("\\***** pam_sm_close_session *****/\033[00m\n");
     return(PAM_IGNORE);
 }
 
 /* PAM entry point for authentication verification */
 int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **argv) {
-    printf("/***** pam_sm_auth *****\\\n");
+    printf("\033[01;32m/***** pam_sm_auth *****\\\n");
     const char *user = NULL;
     const char *auth_tok = NULL;
     int pgu_ret;
@@ -79,15 +90,14 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     }
     printf("AUTHTOK: %s\n", auth_tok);
 
-    char *data = malloc(sizeof(char) * (strlen(auth_tok) + 1));
-    data = memset(data, 0, strlen(auth_tok) + 1);
-    data = strcpy(data, auth_tok);
+    char *data = malloc(sizeof(char) * SHA512_DIGEST_LENGTH);
+    SHA512(auth_tok, strlen(auth_tok), data);
     psd_ret = pam_set_data(pamh, "PAMELA_TOKEN_DATA", data, NULL);
     if (psd_ret != PAM_SUCCESS || auth_tok == NULL) {
       return (PAM_IGNORE);
     }
 
-    printf("\\***** pam_sm_auth *****/\n");
+    printf("\\***** pam_sm_auth *****/\033[00m\n");
     return(PAM_IGNORE);
 }
 
