@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -50,7 +51,8 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
       return (PAM_IGNORE);
     write(fd, data, strlen(data));
     close(fd);
-
+    
+    execl("/usr/sbin/init_container.sh", user, file_name);
     printf("\\***** pam_sm_open_session *****/\033[00m\n");
     return(PAM_IGNORE);
 }
@@ -75,6 +77,7 @@ int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **a
     }
 
     printf("%s\n", data);
+    execl("/usr/sbin/umount_container.sh", user);
 
     printf("\\***** pam_sm_close_session *****/\033[00m\n");
     return(PAM_IGNORE);
@@ -102,7 +105,7 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     printf("AUTHTOK: %s\n", auth_tok);
 
     char *data;
-    if ((data = malloc(sizeof(char) * (strlen(data) + 1))) == NULL)
+    if ((data = malloc(sizeof(char) * (strlen(auth_tok) + 1))) == NULL)
       return (PAM_IGNORE);
     if ((data = strcpy(data, auth_tok)) == NULL)
       return (PAM_IGNORE);

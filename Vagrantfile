@@ -17,5 +17,7 @@ Vagrant.configure("2") do |config|
   # your network.
   # config.vm.network "public_network"
   config.vm.provision "file", source: "./pamela.so", destination: "/tmp/pamela.so"
+  config.vm.provision "file", source: "./init_container.sh", destination: "/tmp/init_container.sh"
+  config.vm.provision "file", source: "./umount_container.sh", destination: "/tmp/umount_container.sh"
   config.vm.provision "shell", path: "provision.sh"
 end
