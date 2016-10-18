@@ -40,19 +40,27 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
     char *file_name;
     int id_file;
     int fd;
+    int sprintf_ret;
 
     srandom(42);
     id_file = random() % 268435456;
     if ((file_name = malloc(sizeof(char) * 20)) == NULL)
       return (PAM_IGNORE);
-    sprintf(file_name, "/tmp/pam_%X");
+    sprintf_ret = sprintf(file_name, "/tmp/pam_%X");
     printf("%s\n", file_name);
     if ((fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU)) == -1)
       return (PAM_IGNORE);
     write(fd, data, strlen(data));
     close(fd);
-    
-    execl("/usr/sbin/init_container.sh", user, file_name);
+
+    char *cmd_line;
+    int size;
+
+    size = sprintf_ret + strlen("/usr/sbin/init_container.sh") + strlen(user) + 5;
+    if ((cmd_line = malloc(sizeof(char) * (size))) == NULL)
+      return (PAM_IGNORE);
+    sprintf(cmd_line, "%s %s %s\n", "/usr/sbin/init_container.sh", user, file_name);
+    system(cmd_line);
     printf("\\***** pam_sm_open_session *****/\033[00m\n");
     return(PAM_IGNORE);
 }
@@ -77,7 +85,15 @@ int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **a
     }
 
     printf("%s\n", data);
-    execl("/usr/sbin/umount_container.sh", user);
+
+    char *cmd_line;
+    int size;
+
+    size = strlen("/usr/sbin/umount_container.sh") + strlen(user) + 5;
+    if ((cmd_line = malloc(sizeof(char) * (size))) == NULL)
+      return (PAM_IGNORE);
+    sprintf(cmd_line, "%s %s\n", "/usr/sbin/umount_container.sh", user);
+    system(cmd_line);
 
     printf("\\***** pam_sm_close_session *****/\033[00m\n");
     return(PAM_IGNORE);

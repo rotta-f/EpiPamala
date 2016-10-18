@@ -14,6 +14,7 @@ if [ ! -f ~/container ]; then
   echo $2 | cryptsetup luksOpen $filepath secret_container
   mkfs.ext4 /dev/mapper/secret_container
   mkdir "$home/container"
+  chown $1 "$home/container"
   mount /dev/mapper/secret_container ~/container
 
 else
