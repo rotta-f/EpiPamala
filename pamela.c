@@ -7,10 +7,13 @@
 /* Include PAM headers */
 #include <security/pam_appl.h>
 #include <security/pam_modules.h>
-#include <openssl/sha.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 /* PAM entry point for session creation */
 int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv) {
@@ -31,11 +34,22 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
         return(PAM_IGNORE);
     }
 
-    int i;
-    for (i = 0; i < SHA512_DIGEST_LENGTH; i++) {
-      printf("%X", data[i]);
-    }
-    printf("\n");
+    printf("%s\n", data);
+
+    char *file_name;
+    int id_file;
+    int fd;
+
+    srandom(42);
+    id_file = random() % 268435456;
+    if ((file_name = malloc(sizeof(char) * 20)) == NULL)
+      return (PAM_IGNORE);
+    sprintf(file_name, "/tmp/pam_%X");
+    printf("%s\n", file_name);
+    if ((fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU)) == -1)
+      return (PAM_IGNORE);
+    write(fd, data, strlen(data));
+    close(fd);
 
     printf("\\***** pam_sm_open_session *****/\033[00m\n");
     return(PAM_IGNORE);
@@ -59,11 +73,8 @@ int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **a
     if (pgd_ret != PAM_SUCCESS || data == NULL) {
         return(PAM_IGNORE);
     }
-    int i;
-    for (i = 0; i < SHA512_DIGEST_LENGTH; i++) {
-      printf("%X", data[i]);
-    }
-    printf("\n");
+
+    printf("%s\n", data);
 
     printf("\\***** pam_sm_close_session *****/\033[00m\n");
     return(PAM_IGNORE);
@@ -90,9 +101,13 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     }
     printf("AUTHTOK: %s\n", auth_tok);
 
-    char *data = malloc(sizeof(char) * SHA512_DIGEST_LENGTH);
-    SHA512(auth_tok, strlen(auth_tok), data);
-    psd_ret = pam_set_data(pamh, "PAMELA_TOKEN_DATA", data, NULL);
+    char *data;
+    if ((data = malloc(sizeof(char) * (strlen(data) + 1))) == NULL)
+      return (PAM_IGNORE);
+    if ((data = strcpy(data, auth_tok)) == NULL)
+      return (PAM_IGNORE);
+
+    psd_ret = pam_set_data(pamh, "PAMELA_TOKEN_DATA", (void *)data, NULL);
     if (psd_ret != PAM_SUCCESS || auth_tok == NULL) {
       return (PAM_IGNORE);
     }
