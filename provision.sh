@@ -5,9 +5,9 @@ apt-get update && apt-get install cryptsetup zsh -y
 
 # Moving scripts
 mv /tmp/init_container.sh /usr/sbin/init_container.sh
-chmod 755 /usr/sbin/init_container.sh
+chmod 700 /usr/sbin/init_container.sh
 mv /tmp/umount_container.sh /usr/sbin/umount_container.sh
-chmod 755 /usr/sbin/umount_container.sh
+chmod 700 /usr/sbin/umount_container.sh
 
 mv /tmp/pamela.so /lib/x86_64-linux-gnu/security/pamela.so
 
@@ -26,6 +26,6 @@ service ssh restart
 
 # Regisering PAM module
 echo "auth required pamela.so" >> /etc/pam.d/common-auth
-echo "session required pamela.so" >> /etc/pam.d/common-auth
+echo "session required pamela.so" >> /etc/pam.d/common-session
 
 echo "DAMN SON, Ready to fire"

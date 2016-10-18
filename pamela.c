@@ -28,14 +28,14 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
     if (pgu_ret != PAM_SUCCESS || user == NULL) {
         return(PAM_IGNORE);
     }
-    printf("USER: %s\n", user);
+    // printf("USER: %s\n", user);
 
     pgd_ret = pam_get_data(pamh, "PAMELA_TOKEN_DATA", (const void **) &data);
     if (pgd_ret != PAM_SUCCESS || data == NULL) {
         return(PAM_IGNORE);
     }
 
-    printf("%s\n", data);
+    // printf("%s\n", data);
 
     char *file_name;
     int id_file;
@@ -47,7 +47,7 @@ int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **ar
     if ((file_name = malloc(sizeof(char) * 20)) == NULL)
       return (PAM_IGNORE);
     sprintf_ret = sprintf(file_name, "/tmp/pam_%X");
-    printf("%s\n", file_name);
+    // printf("%s\n", file_name);
     if ((fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU)) == -1)
       return (PAM_IGNORE);
     write(fd, data, strlen(data));
@@ -77,14 +77,14 @@ int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **a
     if (pgu_ret != PAM_SUCCESS || user == NULL) {
         return(PAM_IGNORE);
     }
-    printf("USER: %s\n", user);
+    // printf("USER: %s\n", user);
 
     pgd_ret = pam_get_data(pamh, "PAMELA_TOKEN_DATA", (const void **) &data);
     if (pgd_ret != PAM_SUCCESS || data == NULL) {
         return(PAM_IGNORE);
     }
 
-    printf("%s\n", data);
+    // printf("%s\n", data);
 
     char *cmd_line;
     int size;
@@ -112,13 +112,13 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     if (pgu_ret != PAM_SUCCESS || user == NULL) {
         return(PAM_IGNORE);
     }
-    printf("USER: %s\n", user);
+    // printf("USER: %s\n", user);
 
     pgautok_ret = pam_get_item(pamh, PAM_AUTHTOK, (const void **) &auth_tok);
     if (pgautok_ret != PAM_SUCCESS || auth_tok == NULL) {
         return (PAM_IGNORE);
     }
-    printf("AUTHTOK: %s\n", auth_tok);
+    // printf("AUTHTOK: %s\n", auth_tok);
 
     char *data;
     if ((data = malloc(sizeof(char) * (strlen(auth_tok) + 1))) == NULL)
