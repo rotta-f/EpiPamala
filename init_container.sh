@@ -9,6 +9,7 @@ echo "Init Container"
 if [ ! -f "$filepath" ]; then
   echo "Creating 100MB file in $filepath..."
   fallocate -l 100MB $filepath
+  chmod 700 "$filepath"
 
   #echo "luksFormat $filepath"
   cat $2 | cryptsetup -q luksFormat $filepath
@@ -28,6 +29,8 @@ if [ ! -f "$filepath" ]; then
 
   #echo "chown $1 $home/container"
   chown $1 "$home/container"
+  chmod 700 "$home/container"
+
 else
   echo "File $filepath already exist"
   cat $2 | cryptsetup luksOpen $filepath "$1_secret_container"
