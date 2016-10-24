@@ -101,7 +101,7 @@ int pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **a
 
 /* PAM entry point for authentication verification */
 int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **argv) {
-    printf("\033[01;32m/***** pam_sm_auth *****\\\n");
+    // printf("\033[01;32m/***** pam_sm_auth *****\\\n");
     const char *user = NULL;
     const char *auth_tok = NULL;
     int pgu_ret;
@@ -131,7 +131,7 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
       return (PAM_IGNORE);
     }
 
-    printf("\\***** pam_sm_auth *****/\033[00m\n");
+    // printf("\\***** pam_sm_auth *****/\033[00m\n");
     return(PAM_IGNORE);
 }
 
